@@ -1,0 +1,36 @@
+#app {
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: #2c3e50;
+}
+html body {
+  height: 100%;
+}
+main {
+  margin: 4rem;
+  padding: 2rem;
+}
+button.btn {
+  background-color: #ff5a5f;
+  color: white;
+  border-color: black;
+  width: 30%;
+}
+.card img {
+  margin-top: 1rem;
+}
+
+.heading {
+  padding: 2rem;
+}
+
+form {
+  padding-left: 2rem;
+  padding-right: 2rem;
+}
+
+form a {
+  color: #ff5a5f;
+}
