@@ -1,9 +1,10 @@
 <template>
+  <h1 class="heading">Shop All Categories</h1>
   <main>
     <div class="col">
       <div class="row">
         <div
-          class="col-md-6 mb-4 col-sm-6"
+          class="col-md-6 mb-4"
           v-for="product in products"
           :key="product.product_id"
         >
@@ -13,7 +14,7 @@
               <img
                 :src="product.photo_url"
                 alt="Product Photo"
-                style="max-width: 70%"
+                style="max-width: 100%"
               />
             </div>
           </div>

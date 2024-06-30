@@ -9,21 +9,30 @@ html body {
   height: 100%;
 }
 main {
-  margin: 4rem;
+  margin-left: 4rem;
+  margin-right: 4rem;
   padding: 2rem;
 }
 button.btn {
   background-color: #ff5a5f;
   color: white;
   border-color: black;
-  width: 30%;
+  width: 55%;
 }
 .card img {
   margin-top: 1rem;
 }
+.card-title {
+  font-size: 1.4rem;
+  margin: 1rem;
+}
+.card-text {
+  font-size: 1.3rem;
+  padding: 0.5rem;
+}
 
 .heading {
-  padding: 2rem;
+  padding-top: 2rem;
 }
 
 form {

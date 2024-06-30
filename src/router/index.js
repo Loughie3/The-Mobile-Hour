@@ -4,6 +4,8 @@ import ShopAllView from "../views/ShopAllView.vue";
 import CategoriesView from "../views/CategoriesView.vue";
 import LoginForm from "../views/LoginForm.vue";
 import SignUp from "../views/SignUp.vue";
+import AdminDashboard from "../views/AdminDashboard.vue";
+import ManageStock from "../views/ManageStock.vue";
 
 const routes = [
   {
@@ -31,11 +33,36 @@ const routes = [
     name: "SignUp",
     component: SignUp,
   },
+  {
+    path: "/admin/dashboard",
+    name: "AdminDashboard",
+    component: AdminDashboard,
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/admin/dashboard/manageStock",
+    name: "ManageStock",
+    component: ManageStock,
+  },
 ];
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
+});
+
+router.beforeEach((to, from, next) => {
+  if (to.matched.some((record) => record.meta.requiresAuth)) {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      next({ path: "/login" });
+    } else {
+      next();
+    }
+  } else {
+    next();
+  }
 });
 
 export default router;

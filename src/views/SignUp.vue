@@ -1,58 +1,62 @@
 <template>
-  <div class="row">
-    <div class="col"></div>
-    <div class="col-12 col-md-4">
-      <h1 class="heading">Login</h1>
-      <form class="container-fluid">
-        <div class="mb-3">
-          <label for="exampleInputEmail1" class="form-label">First Name</label>
-          <input
-            type="text"
-            class="form-control"
-            id="firstName"
-            aria-describedby="emailHelp"
-          />
-        </div>
-        <div class="mb-3">
-          <label for="exampleInputEmail1" class="form-label">Last Name</label>
-          <input
-            type="text"
-            class="form-control"
-            id="LastName"
-            aria-describedby="emailHelp"
-          />
-        </div>
-        <div class="mb-3">
-          <label for="exampleInputEmail1" class="form-label"
-            >Email address</label
-          >
-          <input
-            type="email"
-            class="form-control"
-            id="exampleInputEmail1"
-            aria-describedby="emailHelp"
-          />
-        </div>
-        <div class="mb-3">
-          <label for="exampleInputPassword1" class="form-label">Password</label>
-          <input
-            type="password"
-            class="form-control"
-            id="exampleInputPassword1"
-          />
-        </div>
+  <div>
+    <h2>Login</h2>
+    <form @submit.prevent="login">
+      <label for="username">Username:</label>
+      <input type="text" id="username" v-model="username" required />
 
-        <button type="submit" class="btn">Sign Up</button>
-      </form>
-    </div>
-    <div class="col"></div>
+      <label for="password">Password:</label>
+      <input type="password" id="password" v-model="password" required />
+
+      <button type="submit">Login</button>
+    </form>
+    <p v-if="loginError" class="error">{{ loginError }}</p>
   </div>
 </template>
 
 <script>
 export default {
-  name: "SignUp",
+  data() {
+    return {
+      username: "",
+      password: "",
+      loginError: "",
+    };
+  },
+  methods: {
+    async login() {
+      try {
+        const response = await fetch("http://localhost:3000/api/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            username: this.username,
+            password: this.password,
+          }),
+        });
+
+        if (!response.ok) {
+          const { message } = await response.json();
+          throw new Error(message);
+        }
+
+        const { user } = await response.json();
+        // Handle successful login, e.g., store user info in Vuex/store, redirect to dashboard
+        console.log("Logged in user:", user);
+        // Example: this.$router.push("/admin-dashboard");
+      } catch (error) {
+        console.error("Login failed:", error.message);
+        this.loginError = error.message;
+      }
+    },
+  },
 };
 </script>
 
-<style></style>
+<style scoped>
+.error {
+  color: red;
+}
+</style>
