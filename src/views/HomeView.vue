@@ -10,15 +10,23 @@
         >
           <div class="card h-100">
             <div class="card-body">
-              <span class="card-title">
-                {{ product.manufacturer + " " + product.product_name }}
-              </span>
-              <p class="card-text">${{ product.price }}</p>
               <img
                 :src="product.photo_url"
                 alt="Product Photo"
                 style="max-width: 100%"
               />
+              <h5 class="card-title">
+                {{ product.manufacturer + " " + product.product_name }}
+                <p class="card-text">{{ product.STORAGE + "gb" }}</p>
+              </h5>
+
+              <button
+                @click="navigateTo('/individualItem')"
+                type="btn"
+                class="btn"
+              >
+                Buy
+              </button>
             </div>
           </div>
         </div>
@@ -41,6 +49,9 @@ export default {
     this.fetchProducts();
   },
   methods: {
+    navigateTo(route) {
+      this.$router.push(route);
+    },
     async fetchProducts() {
       try {
         const response = await axios.get(
@@ -55,4 +66,8 @@ export default {
 };
 </script>
 
-<style></style>
+<style scoped>
+.card img {
+  padding: 2rem;
+}
+</style>

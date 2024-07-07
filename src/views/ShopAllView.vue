@@ -33,7 +33,13 @@
 
                   <p class="card-text">${{ product.price }}</p>
 
-                  <button href="#" type="btn" class="btn">Buy</button>
+                  <button
+                    @click="navigateTo('/individualItem')"
+                    type="btn"
+                    class="btn"
+                  >
+                    Buy
+                  </button>
                 </div>
               </div>
             </div>
@@ -61,6 +67,9 @@ export default {
     this.fetchProducts();
   },
   methods: {
+    navigateTo(route) {
+      this.$router.push(route);
+    },
     async fetchProducts() {
       try {
         const response = await axios.get("http://localhost:3000/api/products");

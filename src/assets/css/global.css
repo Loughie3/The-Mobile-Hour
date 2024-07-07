@@ -19,6 +19,11 @@ button.btn {
   border-color: black;
   width: 55%;
 }
+button.btn:hover {
+  background-color: #087e8b;
+  color: white;
+}
+
 .card img {
   margin-top: 1rem;
 }
@@ -42,4 +47,32 @@ form {
 
 form a {
   color: #ff5a5f;
+}
+
+.table th {
+  font-size: 1.2rem;
+  text-align: left;
+}
+.table .updateButton {
+  color: green;
+}
+.table .addButton {
+  background-color: green;
+  color: white;
+  border-radius: 0.2rem;
+  width: 100%;
+}
+
+.table tr {
+  text-align: left;
+}
+
+.table button {
+  color: #ff5a5f;
+  border-style: none;
+  background-color: white;
+}
+
+.data input {
+  border-style: none;
 }

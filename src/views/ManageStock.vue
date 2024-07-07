@@ -19,7 +19,7 @@
               </thead>
               <tbody>
                 <tr
-                  class="stock"
+                  class="data"
                   v-for="product in products"
                   :key="product.product_id"
                 >
@@ -43,6 +43,31 @@
                 </tr>
               </tbody>
             </table>
+            <div
+              v-if="showModal"
+              class="modal fade show d-flex align-items-center justify-content-center"
+              tabindex="-1"
+              style="display: block"
+              aria-modal="true"
+              role="dialog"
+            >
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-body">
+                    <p>The product has been successfully updated.</p>
+                  </div>
+                  <div class="modal-footer">
+                    <button
+                      type="button"
+                      class="btn btn-secondary"
+                      @click="closeModal"
+                    >
+                      Close
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </main>
         <aside>
@@ -89,6 +114,7 @@ export default {
         price: 0,
         stock_on_hand: 0,
       },
+      showModal: false,
     };
   },
   created() {
@@ -126,6 +152,7 @@ export default {
           `http://localhost:3000/api/products/${product.product_id}`,
           product
         );
+        this.showModal = true;
       } catch (error) {
         console.error("Error updating product:", error);
       }
@@ -140,31 +167,11 @@ export default {
         console.error("Error deleting product:", error);
       }
     },
+    closeModal() {
+      this.showModal = false;
+    },
   },
 };
 </script>
 
-<style scoped>
-.table th {
-  color: #087e8b;
-  font-size: 1.2rem;
-}
-.table .updateButton {
-  color: green;
-}
-.table .addButton {
-  color: #087e8b;
-}
-
-.table button {
-  color: #ff5a5f;
-  border-style: none;
-  background-color: white;
-}
-input {
-  border-color: #087e8b;
-}
-.stock input {
-  border-style: none;
-}
-</style>
+<style></style>

@@ -57,4 +57,8 @@ export default {
   padding: 2rem;
   margin: 2rem;
 }
+img {
+  width: 50%; /* Half the original width */
+  height: auto; /* Adjust height to maintain aspect ratio */
+}
 </style>

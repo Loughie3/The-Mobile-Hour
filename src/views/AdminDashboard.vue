@@ -2,18 +2,39 @@
   <main>
     <div class="row">
       <div class="col-lg-12">
-        <h1 class="heading">Welcome back, {{ user.username }}</h1>
+        <h1 class="heading">Welcome back</h1>
         <div class="button-group">
           <div class="button-item">
-            <a href="/admin/dashboard/manageStock" class="btn">
+            <button
+              @click="navigateTo('/admin/dashboard/manageStock')"
+              class="btn"
+            >
               Manage Stock
-            </a>
+            </button>
           </div>
           <div class="button-item">
-            <button class="btn">Manage Users</button>
+            <button
+              @click="navigateTo('/admin/dashboard/managerViewUsers')"
+              class="btn"
+            >
+              Manage Users - Manager
+            </button>
           </div>
           <div class="button-item">
-            <button class="btn">View Change Log</button>
+            <button
+              @click="navigateTo('/admin/dashboard/viewUsers')"
+              class="btn"
+            >
+              Manage Users
+            </button>
+          </div>
+          <div class="button-item">
+            <button
+              @click="navigateTo('/admin/dashboard/changeLog')"
+              class="btn"
+            >
+              View Change Log
+            </button>
           </div>
         </div>
       </div>
@@ -29,8 +50,10 @@ export default {
       user: {},
     };
   },
-  mounted() {
-    // Call fetchUser() method if needed
+  methods: {
+    navigateTo(route) {
+      this.$router.push(route);
+    },
   },
 };
 </script>

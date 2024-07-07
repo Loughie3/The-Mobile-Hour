@@ -6,6 +6,10 @@ import LoginForm from "../views/LoginForm.vue";
 import SignUp from "../views/SignUp.vue";
 import AdminDashboard from "../views/AdminDashboard.vue";
 import ManageStock from "../views/ManageStock.vue";
+import ManagerViewUsers from "../views/ManagerViewUsers.vue";
+import ViewUsers from "../views/ViewUsers";
+import ChangeLog from "../views/ChangeLog.vue";
+import IndividualItem from "../views/IndividualItem.vue";
 
 const routes = [
   {
@@ -43,6 +47,26 @@ const routes = [
     path: "/admin/dashboard/manageStock",
     name: "ManageStock",
     component: ManageStock,
+  },
+  {
+    path: "/admin/dashboard/managerViewUsers",
+    name: "ManagerViewUsers",
+    component: ManagerViewUsers,
+  },
+  {
+    path: "/admin/dashboard/viewUsers",
+    name: "ViewUsers",
+    component: ViewUsers,
+  },
+  {
+    path: "/admin/dashboard/changeLog",
+    name: "ChangeLog",
+    component: ChangeLog,
+  },
+  {
+    path: "/individualItem",
+    name: "IndividualItem",
+    component: IndividualItem,
   },
 ];
 
