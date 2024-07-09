@@ -1,7 +1,6 @@
 <template>
-  <h2>Welcome back Manager</h2>
   <div>
-    <h1 class="heading">View All Users</h1>
+    <h1 class="heading">View All Users - Manager Only</h1>
     <div class="row">
       <div class="col">
         <main>
@@ -49,6 +48,7 @@
                   <th>Last Name</th>
                   <th>Role</th>
                   <th>User Name</th>
+                  <th>Password</th>
                   <th>Edit User</th>
 
                   <td></td>
@@ -60,6 +60,7 @@
                   <td><input v-model="newUser.lastname" /></td>
                   <td><input v-model="newUser.user_role" /></td>
                   <td><input v-model="newUser.username" /></td>
+                  <td><input v-model="newUser.user_password" /></td>
                   <td>
                     <button class="addButton" @click="addUser">Add</button>
                   </td>
@@ -85,6 +86,7 @@ export default {
         lastname: "",
         user_role: "",
         username: "",
+        user_password: "",
       },
     };
   },
@@ -110,8 +112,9 @@ export default {
         this.newUser = {
           firstname: "",
           lastname: "",
-          user_role: 0,
-          username: 0,
+          user_role: "",
+          username: "",
+          user_password: "",
         };
       } catch (error) {
         console.error("Error adding User:", error);

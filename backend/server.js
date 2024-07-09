@@ -167,11 +167,11 @@ app.put("/api/users/:id", (req, res) => {
 
 // Add A new User
 app.post("/api/users", (req, res) => {
-  const { firstname, lastname, user_role, username } = req.body;
-  const query = `INSERT INTO user (firstname, lastname, user_role, username) VALUES (?, ?, ?, ?)`;
+  const { firstname, lastname, user_role, username, user_password } = req.body;
+  const query = `INSERT INTO user (firstname, lastname, user_role, username, user_password) VALUES (?, ?, ?, ?, ?)`;
   connection.query(
     query,
-    [firstname, lastname, user_role, username],
+    [firstname, lastname, user_role, username, user_password],
     (err, result) => {
       if (err) {
         console.error("Error adding user:", err);
@@ -293,19 +293,31 @@ const checkAdmin = (req, res, next) => {
   }
   next();
 };
+// Middleware to check if the user is an admin or manager
+const checkAdminOrManager = (req, res, next) => {
+  if (req.user.role !== "Admin" && req.user.role !== "Manager") {
+    return res.sendStatus(403); // Forbidden
+  }
+  next();
+};
 
 // Display the change Log
-app.get("/api/admin/changelogs", authenticateJWT, checkAdmin, (req, res) => {
-  const query = `SELECT * FROM changelog`;
-  connection.query(query, (error, results) => {
-    if (error) {
-      console.log("Error Fetching changelog", error);
-      res.status(500).send("Server error");
-      return;
-    }
-    res.json(results);
-  });
-});
+app.get(
+  "/api/admin/changelogs",
+  authenticateJWT,
+  checkAdminOrManager,
+  (req, res) => {
+    const query = `SELECT * FROM changelog`;
+    connection.query(query, (error, results) => {
+      if (error) {
+        console.log("Error Fetching changelog", error);
+        res.status(500).send("Server error");
+        return;
+      }
+      res.json(results);
+    });
+  }
+);
 
 // Admin-only route example
 app.get("/api/admin/dashboard", authenticateJWT, checkAdmin, (req, res) => {

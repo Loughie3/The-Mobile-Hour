@@ -9,6 +9,7 @@ import ManagerViewUsers from "../views/ManagerViewUsers.vue";
 import ViewUsers from "../views/ViewUsers";
 import ChangeLog from "../views/ChangeLog.vue";
 import IndividualItem from "../views/IndividualItem.vue";
+import Unauthorised from "../views/Unauthorised.vue";
 
 const routes = [
   {
@@ -53,7 +54,7 @@ const routes = [
     path: "/admin/dashboard/managerViewUsers",
     name: "ManagerViewUsers",
     component: ManagerViewUsers,
-    meta: { requiresAuth: true, requiresAdmin: true },
+    meta: { requiresAuth: true, requiresManager: true },
   },
   {
     path: "/admin/dashboard/viewUsers",
@@ -66,6 +67,11 @@ const routes = [
     name: "ChangeLog",
     component: ChangeLog,
     meta: { requiresAuth: true, requiresAdmin: true },
+  },
+  {
+    path: "/unauthorised",
+    name: "Unauthorised",
+    component: Unauthorised,
   },
 ];
 
@@ -93,12 +99,24 @@ router.beforeEach(async (to, from, next) => {
 
       if (response.ok) {
         const data = await response.json();
+
+        // Check if route requires Admin role
         if (to.matched.some((record) => record.meta.requiresAdmin)) {
-          if (data.role !== "Admin") {
-            next({ path: "/" }); // Redirect non-admin users
+          if (data.role !== "Admin" && data.role !== "Manager") {
+            next({ path: "/unauthorised" }); // Redirect non-admin and non-manager users
             return;
           }
         }
+
+        // Check if route requires Manager role
+        if (to.matched.some((record) => record.meta.requiresManager)) {
+          if (data.role !== "Manager") {
+            next({ path: "/unauthorised" }); // Redirect non-manager users
+            return;
+          }
+        }
+
+        // If no specific role check is required, or if role check passes
         next();
       } else {
         console.error(`Error verifying token: ${response.statusText}`);
