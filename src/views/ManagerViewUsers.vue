@@ -41,7 +41,7 @@
         </main>
         <aside>
           <h2 class="heading">Add New User</h2>
-          <div class="container">
+          <div class="container bottom-container">
             <table class="table">
               <thead>
                 <tr>
@@ -129,7 +129,7 @@ export default {
     },
     async deleteUser(user) {
       try {
-        await axios.delete(`http://localhost:3000/api/user/${user.user_id}`);
+        await axios.delete(`http://localhost:3000/api/users/${user.user_id}`);
         this.fetchUsers(); // Refresh the list of users
       } catch (error) {
         console.error("Error deleting user:", error);

@@ -1,7 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "../views/HomeView.vue";
 import ShopAllView from "../views/ShopAllView.vue";
-import CategoriesView from "../views/CategoriesView.vue";
 import LoginForm from "../views/LoginForm.vue";
 import SignUp from "../views/SignUp.vue";
 import AdminDashboard from "../views/AdminDashboard.vue";
@@ -22,11 +21,7 @@ const routes = [
     name: "ShopAll",
     component: ShopAllView,
   },
-  {
-    path: "/categories",
-    name: "Categories",
-    component: CategoriesView,
-  },
+
   {
     path: "/login",
     name: "LoginForm",
@@ -38,35 +33,39 @@ const routes = [
     component: SignUp,
   },
   {
+    path: "/individualItem",
+    name: "IndividualItem",
+    component: IndividualItem,
+  },
+  {
     path: "/admin/dashboard",
     name: "AdminDashboard",
     component: AdminDashboard,
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: true, requiresAdmin: true },
   },
   {
     path: "/admin/dashboard/manageStock",
     name: "ManageStock",
     component: ManageStock,
+    meta: { requiresAuth: true, requiresAdmin: true },
   },
   {
     path: "/admin/dashboard/managerViewUsers",
     name: "ManagerViewUsers",
     component: ManagerViewUsers,
+    meta: { requiresAuth: true, requiresAdmin: true },
   },
   {
     path: "/admin/dashboard/viewUsers",
     name: "ViewUsers",
     component: ViewUsers,
+    meta: { requiresAuth: true, requiresAdmin: true },
   },
   {
     path: "/admin/dashboard/changeLog",
     name: "ChangeLog",
     component: ChangeLog,
-  },
-  {
-    path: "/individualItem",
-    name: "IndividualItem",
-    component: IndividualItem,
+    meta: { requiresAuth: true, requiresAdmin: true },
   },
 ];
 
@@ -75,14 +74,39 @@ const router = createRouter({
   routes,
 });
 
-router.beforeEach((to, from, next) => {
-  if (to.matched.some((record) => record.meta.requiresAuth)) {
-    const token = localStorage.getItem("token");
+router.beforeEach(async (to, from, next) => {
+  const token = localStorage.getItem("token");
 
+  if (to.matched.some((record) => record.meta.requiresAuth)) {
     if (!token) {
       next({ path: "/login" });
-    } else {
-      next();
+      return;
+    }
+
+    try {
+      const response = await fetch("http://localhost:3000/api/verify", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        if (to.matched.some((record) => record.meta.requiresAdmin)) {
+          if (data.role !== "Admin") {
+            next({ path: "/" }); // Redirect non-admin users
+            return;
+          }
+        }
+        next();
+      } else {
+        console.error(`Error verifying token: ${response.statusText}`);
+        next({ path: "/login" });
+      }
+    } catch (error) {
+      console.error("Error verifying token:", error);
+      next({ path: "/login" });
     }
   } else {
     next();

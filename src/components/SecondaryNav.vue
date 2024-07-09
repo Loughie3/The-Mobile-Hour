@@ -6,9 +6,6 @@
           >Shop All</a
         >
       </li>
-      <li class="nav-item">
-        <a class="nav-link" href="/categories">Categories</a>
-      </li>
     </ul>
   </nav>
 </template>
@@ -22,7 +19,7 @@ export default {
 <style scoped>
 .SecondaryNav {
   background-color: #ff5a5f;
-  height: 8vh;
+  height: 6vh;
   display: flex;
   align-items: center;
   justify-content: flex-start; /* Align items to the left */

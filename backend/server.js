@@ -1,4 +1,3 @@
-// server.js
 const express = require("express");
 const cors = require("cors");
 const path = require("path"); // Import the path module
@@ -17,6 +16,26 @@ app.use(cors());
 // Use CORS to allow requests from your Vue app
 app.use(express.static(path.join(__dirname, "../public")));
 
+// Middleware to verify JWT
+const authenticateJWT = (req, res, next) => {
+  const authHeader = req.headers.authorization;
+  const token = authHeader && authHeader.split(" ")[1];
+
+  if (!token) {
+    return res.sendStatus(403); // Forbidden
+  }
+
+  jwt.verify(token, secretKey, (err, user) => {
+    if (err) {
+      console.error("Error verifying token:", err);
+      return res.sendStatus(403); // Forbidden
+    }
+
+    req.user = user;
+    next();
+  });
+};
+
 // Fetch all products with feature storage from the database
 app.get("/api/products", (req, res) => {
   const query = `
@@ -34,7 +53,7 @@ app.get("/api/products", (req, res) => {
   });
 });
 
-//Fetch product by ID
+// Fetch product by ID
 app.get("/api/products/:id", (req, res) => {
   const productId = req.params.id;
   const query = `
@@ -113,9 +132,9 @@ app.delete("/api/products/:id", (req, res) => {
   });
 });
 
-//Get All users
+// Get All users
 app.get("/api/users", (req, res) => {
-  const query = `SELECT * FROM user `;
+  const query = `SELECT * FROM user`;
   connection.query(query, (error, results) => {
     if (error) {
       console.error("Error fetching users:", error);
@@ -125,6 +144,7 @@ app.get("/api/users", (req, res) => {
     res.json(results);
   });
 });
+
 // Update User
 app.put("/api/users/:id", (req, res) => {
   const { id } = req.params;
@@ -145,10 +165,10 @@ app.put("/api/users/:id", (req, res) => {
   );
 });
 
-//Add A new User
+// Add A new User
 app.post("/api/users", (req, res) => {
   const { firstname, lastname, user_role, username } = req.body;
-  const query = `INSERT INTO user (firstname, lastname, user_role, username ) VALUES (?, ?, ?, ?)`;
+  const query = `INSERT INTO user (firstname, lastname, user_role, username) VALUES (?, ?, ?, ?)`;
   connection.query(
     query,
     [firstname, lastname, user_role, username],
@@ -163,8 +183,8 @@ app.post("/api/users", (req, res) => {
   );
 });
 
-//Delete User
-app.delete("/api/user/:id", (req, res) => {
+// Delete User
+app.delete("/api/users/:id", (req, res) => {
   const { id } = req.params;
   const query = `DELETE FROM user WHERE user_id = ?`;
 
@@ -175,6 +195,45 @@ app.delete("/api/user/:id", (req, res) => {
       return;
     }
     res.sendStatus(204); // No Content
+  });
+});
+
+// API Request to grab specific different categories with feature storage
+app.get("/api/specific-products", (req, res) => {
+  const specificProducts = [2, 6, 11, 18];
+
+  const query = `
+    SELECT p.*, f.STORAGE
+    FROM the_mobile_hour.product p
+    LEFT JOIN the_mobile_hour.feature f ON p.feature_id = f.feature_id
+    WHERE p.product_id IN (${specificProducts.join(",")})`;
+
+  connection.query(query, (err, results) => {
+    if (err) {
+      console.error("Error executing query:", err);
+      res.status(500).send("Server error");
+      return;
+    }
+    res.json(results);
+  });
+});
+
+app.get("/api/most-popular", (req, res) => {
+  const mostPopular = [2, 3, 6, 8, 11, 18];
+
+  const query = `
+    SELECT p.*, f.STORAGE
+    FROM the_mobile_hour.product p
+    LEFT JOIN the_mobile_hour.feature f ON p.feature_id = f.feature_id
+    WHERE p.product_id IN (${mostPopular.join(",")})`;
+
+  connection.query(query, (err, results) => {
+    if (err) {
+      console.error("Error executing query:", err);
+      res.status(500).send("Server error");
+      return;
+    }
+    res.json(results);
   });
 });
 
@@ -222,78 +281,21 @@ app.post("/api/login", (req, res) => {
   });
 });
 
-// Middleware to verify JWT
-const authenticateJWT = (req, res, next) => {
-  const token = req.headers.authorization;
+// Add this route to your server.js to verify JWT token and return user info
+app.post("/api/verify", authenticateJWT, (req, res) => {
+  res.json({ role: req.user.role });
+});
 
-  if (!token) {
-    return res.sendStatus(403);
+// Middleware to check if the user is an admin
+const checkAdmin = (req, res, next) => {
+  if (req.user.role !== "Admin") {
+    return res.sendStatus(403); // Forbidden
   }
-
-  jwt.verify(token, secretKey, (err, user) => {
-    if (err) {
-      return res.sendStatus(403);
-    }
-
-    req.user = user;
-    next();
-  });
+  next();
 };
 
-// Admin-only route example
-app.get("/api/admin/dashboard", authenticateJWT, (req, res) => {
-  if (req.user.role !== "Admin") {
-    return res.sendStatus(403);
-  }
-
-  res.json({ message: "Welcome to the admin dashboard!" });
-});
-
-// API Request to grab specific different categories with feature storage
-app.get("/api/specific-products", (req, res) => {
-  const specificProducts = [2, 6, 11, 18];
-
-  const query = `
-    SELECT p.*, f.STORAGE
-    FROM the_mobile_hour.product p
-    LEFT JOIN the_mobile_hour.feature f ON p.feature_id = f.feature_id
-    WHERE p.product_id IN (${specificProducts.join(",")})`;
-
-  connection.query(query, (err, results) => {
-    if (err) {
-      console.error("Error executing query:", err);
-      res.status(500).send("Server error");
-      return;
-    }
-    res.json(results);
-  });
-});
-
-app.get("/api/most-popular", (req, res) => {
-  const mostPopular = [2, 3, 6, 8, 11, 18];
-
-  const query = `
-    SELECT p.*, f.STORAGE
-    FROM the_mobile_hour.product p
-    LEFT JOIN the_mobile_hour.feature f ON p.feature_id = f.feature_id
-    WHERE p.product_id IN (${mostPopular.join(",")})`;
-
-  connection.query(query, (err, results) => {
-    if (err) {
-      console.error("Error executing query:", err);
-      res.status(500).send("Server error");
-      return;
-    }
-    res.json(results);
-  });
-});
-
-app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
-});
-
-//Display the change Log
-app.get("/api/admin/changelogs", (req, res) => {
+// Display the change Log
+app.get("/api/admin/changelogs", authenticateJWT, checkAdmin, (req, res) => {
   const query = `SELECT * FROM changelog`;
   connection.query(query, (error, results) => {
     if (error) {
@@ -303,4 +305,13 @@ app.get("/api/admin/changelogs", (req, res) => {
     }
     res.json(results);
   });
+});
+
+// Admin-only route example
+app.get("/api/admin/dashboard", authenticateJWT, checkAdmin, (req, res) => {
+  res.json({ message: "Welcome to the admin dashboard!" });
+});
+
+app.listen(port, () => {
+  console.log(`Server is running on http://localhost:${port}`);
 });

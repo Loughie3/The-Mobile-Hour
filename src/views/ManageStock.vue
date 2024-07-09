@@ -72,7 +72,7 @@
         </main>
         <aside>
           <h2 class="heading">Add New Items</h2>
-          <div class="container">
+          <div class="container bottom-container">
             <table class="table">
               <thead>
                 <tr>

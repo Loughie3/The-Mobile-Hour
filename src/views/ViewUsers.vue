@@ -1,9 +1,9 @@
 <template>
-  <div>
-    <h1 class="heading">View All Users</h1>
-    <div class="row">
-      <div class="col">
-        <main>
+  <div class="page-container">
+    <main class="content-wrap">
+      <h1 class="heading">View All Users</h1>
+      <div class="row">
+        <div class="col">
           <div class="container">
             <table class="table">
               <thead>
@@ -37,9 +37,9 @@
               </tbody>
             </table>
           </div>
-        </main>
+        </div>
       </div>
-    </div>
+    </main>
   </div>
 </template>
 
@@ -83,7 +83,7 @@ export default {
     },
     async deleteUser(user) {
       try {
-        await axios.delete(`http://localhost:3000/api/user/${user.user_id}`);
+        await axios.delete(`http://localhost:3000/api/users/${user.user_id}`);
         this.fetchUsers(); // Refresh the list of users
       } catch (error) {
         console.error("Error deleting user:", error);
@@ -93,4 +93,14 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+.page-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.content-wrap {
+  flex: 1;
+}
+</style>

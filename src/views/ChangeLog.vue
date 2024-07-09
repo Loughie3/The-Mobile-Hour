@@ -54,9 +54,15 @@ export default {
   },
   methods: {
     async fetchChangelogs() {
+      const token = localStorage.getItem("token");
       try {
         const response = await axios.get(
-          "http://localhost:3000/api/admin/changelogs"
+          "http://localhost:3000/api/admin/changelogs",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
         this.changelogs = response.data;
       } catch (error) {
