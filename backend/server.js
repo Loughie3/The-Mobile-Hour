@@ -18,7 +18,23 @@ app.use(cors());
 // Use CORS to allow requests from your Vue app
 app.use(express.static(path.join(__dirname, "../public")));
 
-const upload = multer({ dest: "uploads/" });
+// Serve static files from the 'uploads' directory
+app.use("/uploads", express.static(path.join(__dirname, "../public/uploads")));
+
+app.use("/images", express.static(path.join(__dirname, "images")));
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, path.join(__dirname, "../public/uploads")); // Save to public/uploads
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+    const extension = file.mimetype.split("/")[1]; // Get the file extension
+    cb(null, uniqueSuffix + "." + extension);
+  },
+});
+
+const upload = multer({ storage: storage });
 
 // Middleware to verify JWT
 const authenticateJWT = (req, res, next) => {
@@ -89,7 +105,7 @@ app.post("/api/products", upload.single("image"), (req, res) => {
     stock_on_hand,
     features,
   } = req.body;
-  const image = req.file ? req.file.path : null;
+  const image = req.file ? `/uploads/${req.file.filename}` : null;
 
   const featureQuery = `
   INSERT INTO feature (weight, dimensions, OS, screensize, resolution, CPU, RAM, STORAGE, battery, rear_camera, front_camera)

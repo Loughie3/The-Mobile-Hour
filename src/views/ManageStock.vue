@@ -38,6 +38,15 @@
                   <td><input v-model="product.price" /></td>
                   <td><input v-model="product.stock_on_hand" /></td>
                   <td>
+                    <!-- Add the image display here -->
+                    <img
+                      v-if="product.photo_url"
+                      :src="product.photo_url"
+                      alt="Product Image"
+                      style="max-width: 100px; max-height: 100px"
+                    />
+                  </td>
+                  <td>
                     <button
                       class="updateButton"
                       @click="updateProduct(product)"
