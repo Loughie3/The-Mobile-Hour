@@ -9,10 +9,13 @@ html body {
   height: 100%;
 }
 main {
-  margin-left: 4rem;
-  margin-right: 4rem;
-  padding: 2rem;
+  padding-left: 6rem;
+  padding-right: 6rem;
+  margin-right: 6rem;
+  margin-left: 6rem;
+  padding-bottom: 4rem;
 }
+
 button.btn {
   background-color: #ff5a5f;
   color: white;
@@ -37,7 +40,7 @@ button.btn:hover {
 }
 
 .heading {
-  padding-top: 4rem;
+  padding-top: 11rem;
   padding-bottom: 3rem;
 }
 
@@ -92,6 +95,10 @@ form a {
   border-bottom: 1px solid #ddd;
 }
 
+.breadcrumb a {
+  color: #ff5a5f;
+  text-decoration: none;
+}
 @media (max-width: 800px) {
   .table,
   .table thead,
@@ -114,12 +121,34 @@ form a {
     flex-direction: column;
   }
 }
-.page-container {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
+@media (max-width: 1115px) and (min-width: 760px) {
+  main {
+    padding-left: 2rem;
+    padding-right: 2rem;
+    margin-right: 1rem;
+    margin-left: 1rem;
+  }
 }
+@media (max-width: 580px) {
+  main {
+    padding-left: 1rem;
+    padding-right: 1rem;
+    margin-right: 0.5rem;
+    margin-left: 0.5rem;
+  }
 
-.content-wrap {
-  flex: 1;
+  .card-title {
+    font-size: 1.2rem; /* Adjust title font size */
+    margin: 0.5rem;
+  }
+
+  .card-text {
+    font-size: 1rem; /* Adjust text font size */
+    padding: 0.5rem;
+  }
+
+  button.btn {
+    width: 100%; /* Make button full width */
+    margin-top: 0.5rem;
+  }
 }

@@ -4,6 +4,8 @@ const path = require("path"); // Import the path module
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const connection = require("./connection"); // Import the connection
+const multer = require("multer");
+
 const app = express();
 const port = 3000;
 const secretKey = "JJJ";
@@ -15,6 +17,8 @@ app.use(cors());
 
 // Use CORS to allow requests from your Vue app
 app.use(express.static(path.join(__dirname, "../public")));
+
+const upload = multer({ dest: "uploads/" });
 
 // Middleware to verify JWT
 const authenticateJWT = (req, res, next) => {
@@ -36,60 +40,109 @@ const authenticateJWT = (req, res, next) => {
   });
 };
 
-// Fetch all products with feature storage from the database
+// Fetch all products with their features
 app.get("/api/products", (req, res) => {
   const query = `
-    SELECT p.*, f.STORAGE
-    FROM the_mobile_hour.product p
-    LEFT JOIN the_mobile_hour.feature f ON p.feature_id = f.feature_id`;
+    SELECT p.*, f.*
+    FROM product p
+    LEFT JOIN feature f ON p.feature_id = f.feature_id;
+  `;
 
   connection.query(query, (err, results) => {
     if (err) {
       console.error("Error executing query:", err);
-      res.status(500).send("Server error");
-      return;
+      return res.status(500).send("Server error");
     }
     res.json(results);
   });
 });
 
-// Fetch product by ID
+// Fetch a specific product by ID
 app.get("/api/products/:id", (req, res) => {
   const productId = req.params.id;
   const query = `
     SELECT p.*, f.*
-    FROM the_mobile_hour.product p
-    LEFT JOIN the_mobile_hour.feature f ON p.feature_id = f.feature_id
-    WHERE p.product_id = ?`;
+    FROM product p
+    LEFT JOIN feature f ON p.feature_id = f.feature_id
+    WHERE p.product_id = ?;
+  `;
 
   connection.query(query, [productId], (err, results) => {
     if (err) {
       console.error("Error executing query:", err);
-      res.status(500).send("Server error");
-      return;
+      return res.status(500).send("Server error");
     }
     if (results.length === 0) {
-      res.status(404).send("Product not found");
-      return;
+      return res.status(404).send("Product not found");
     }
     res.json(results[0]);
   });
 });
 
-app.post("/api/products", (req, res) => {
-  const { product_name, manufacturer, price, stock_on_hand } = req.body;
-  const query = `INSERT INTO product (product_name, manufacturer, price, stock_on_hand) VALUES (?, ?, ?, ?)`;
+// Add a new product
+app.post("/api/products", upload.single("image"), (req, res) => {
+  const {
+    product_name,
+    product_model,
+    manufacturer,
+    price,
+    stock_on_hand,
+    features,
+  } = req.body;
+  const image = req.file ? req.file.path : null;
+
+  const featureQuery = `
+  INSERT INTO feature (weight, dimensions, OS, screensize, resolution, CPU, RAM, STORAGE, battery, rear_camera, front_camera)
+  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+`;
 
   connection.query(
-    query,
-    [product_name, manufacturer, price, stock_on_hand],
+    featureQuery,
+    [
+      features.weight,
+      features.dimensions,
+      features.OS,
+      features.screensize,
+      features.resolution,
+      features.CPU,
+      features.RAM,
+      features.STORAGE,
+      features.battery,
+      features.rear_camera,
+      features.front_camera,
+    ],
     (err, result) => {
       if (err) {
-        console.error("Error adding product:", err);
-        res.status(500).send("Server error");
-        return;
+        console.error("Error adding features:", err);
+        return res.status(500).send("Server error");
       }
-      res.json({ product_id: result.insertId, ...req.body });
+
+      const featureId = result.insertId;
+
+      const productQuery = `
+    INSERT INTO product (product_name, product_model, manufacturer, price, stock_on_hand, feature_id, photo_url)
+    VALUES (?, ?, ?, ?, ?, ?, ?);
+  `;
+
+      connection.query(
+        productQuery,
+        [
+          product_name,
+          product_model,
+          manufacturer,
+          price,
+          stock_on_hand,
+          featureId,
+          image,
+        ],
+        (err, result) => {
+          if (err) {
+            console.error("Error adding product:", err);
+            return res.status(500).send("Server error");
+          }
+          res.json({ product_id: result.insertId, ...req.body });
+        }
+      );
     }
   );
 });

@@ -29,9 +29,9 @@
 
     <div class="col-md-12">
       <aside class="product-specs">
-        <h1 class="heading">Product Specs</h1>
-        <p>Weight: {{ product.weight }} kg</p>
-        <p>Dimensions: {{ product.dimensions }}</p>
+        <h1 class="specs">Product Specs:</h1>
+        <p>Weight: {{ product.weight }} grams</p>
+        <p>Dimensions: {{ product.dimensions }} cm</p>
         <p>OS: {{ product.OS }}</p>
         <p>Screen Size: {{ product.screensize }} inches</p>
         <p>Resolution: {{ product.resolution }}</p>
@@ -80,9 +80,10 @@ export default {
   padding: 20px;
 }
 
-.heading {
+.specs {
   font-size: 2rem;
-  margin-bottom: 20px;
+  padding-top: 2rem;
+  padding-bottom: 2rem;
   text-align: center;
 }
 

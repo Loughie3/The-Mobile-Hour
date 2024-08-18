@@ -9,6 +9,9 @@
         <div class="col-md-6 links">
           <ul>
             <li><a href="/">Home</a></li>
+            <li>
+              <a href="/shopAll">Shop All</a>
+            </li>
             <li><a href="/login">Profile</a></li>
             <li><a href="/">Cart</a></li>
           </ul>

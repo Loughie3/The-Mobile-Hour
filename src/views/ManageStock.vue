@@ -1,17 +1,27 @@
 <template>
   <div>
     <h1 class="heading">View all Stock</h1>
+
     <div class="row">
       <div class="col">
         <main>
+          <nav style="--bs-breadcrumb-divider: '>'" aria-label="breadcrumb">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item">
+                <a href="/admin/dashboard">Admin Dashboard</a>
+              </li>
+              <li class="breadcrumb-item active" aria-current="page">
+                Manage Stock
+              </li>
+            </ol>
+          </nav>
           <div class="container">
             <table class="table">
               <thead>
                 <tr>
-                  <th>Item</th>
+                  <th>Name</th>
                   <th>Brand</th>
                   <th>Price</th>
-
                   <th>Stock on Hand</th>
                   <th>Update Product</th>
                   <th>Delete Product</th>
@@ -71,29 +81,83 @@
           </div>
         </main>
         <aside>
-          <h2 class="heading">Add New Items</h2>
+          <h2>Add New Items</h2>
           <div class="container bottom-container">
-            <table class="table">
-              <thead>
-                <tr>
-                  <th>Item</th>
-                  <th>Brand</th>
-                  <th>Price</th>
-                  <th>Stock on Hand</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td><input v-model="newProduct.product_name" /></td>
-                  <td><input v-model="newProduct.manufacturer" /></td>
-                  <td><input v-model="newProduct.price" /></td>
-                  <td><input v-model="newProduct.stock_on_hand" /></td>
-                  <td>
-                    <button class="addButton" @click="addProduct">Add</button>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+            <form @submit.prevent="addProduct">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Item</th>
+                    <th>Brand</th>
+                    <th>Price</th>
+                    <th>Stock on Hand</th>
+                    <th>Image</th>
+                    <th>Feature Details</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><input v-model="newProduct.product_name" /></td>
+                    <td><input v-model="newProduct.manufacturer" /></td>
+                    <td><input v-model="newProduct.price" /></td>
+                    <td><input v-model="newProduct.stock_on_hand" /></td>
+                    <td><input type="file" @change="handleFileUpload" /></td>
+                    <td>
+                      <!-- Feature inputs -->
+                      <div>
+                        <input
+                          v-model="newProduct.features.weight"
+                          placeholder="Weight"
+                        />
+                        <input
+                          v-model="newProduct.features.dimensions"
+                          placeholder="Dimensions"
+                        />
+                        <input
+                          v-model="newProduct.features.OS"
+                          placeholder="OS"
+                        />
+                        <input
+                          v-model="newProduct.features.screensize"
+                          placeholder="Screen Size"
+                        />
+                        <input
+                          v-model="newProduct.features.resolution"
+                          placeholder="Resolution"
+                        />
+                        <input
+                          v-model="newProduct.features.CPU"
+                          placeholder="CPU"
+                        />
+                        <input
+                          v-model="newProduct.features.RAM"
+                          placeholder="RAM"
+                        />
+                        <input
+                          v-model="newProduct.features.STORAGE"
+                          placeholder="Storage"
+                        />
+                        <input
+                          v-model="newProduct.features.battery"
+                          placeholder="Battery"
+                        />
+                        <input
+                          v-model="newProduct.features.rear_camera"
+                          placeholder="Rear Camera"
+                        />
+                        <input
+                          v-model="newProduct.features.front_camera"
+                          placeholder="Front Camera"
+                        />
+                      </div>
+                    </td>
+                    <td>
+                      <button class="addButton" type="submit">Add</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </form>
           </div>
         </aside>
       </div>
@@ -110,9 +174,24 @@ export default {
       products: [],
       newProduct: {
         product_name: "",
+        product_model: "", // Added product_model
         manufacturer: "",
         price: 0,
         stock_on_hand: 0,
+        image: null,
+        features: {
+          weight: "",
+          dimensions: "",
+          OS: "",
+          screensize: "",
+          resolution: "",
+          CPU: "",
+          RAM: "",
+          STORAGE: "",
+          battery: "",
+          rear_camera: "",
+          front_camera: "",
+        },
       },
       showModal: false,
     };
@@ -130,21 +209,60 @@ export default {
       }
     },
     async addProduct() {
+      const formData = new FormData();
+      formData.append("product_name", this.newProduct.product_name);
+      formData.append("product_model", this.newProduct.product_model);
+      formData.append("manufacturer", this.newProduct.manufacturer);
+      formData.append("price", this.newProduct.price);
+      formData.append("stock_on_hand", this.newProduct.stock_on_hand);
+      if (this.newProduct.image) {
+        formData.append("image", this.newProduct.image);
+      }
+      // Append features as individual form data
+      Object.keys(this.newProduct.features).forEach((key) => {
+        formData.append(`features[${key}]`, this.newProduct.features[key]);
+      });
+
       try {
         const response = await axios.post(
           "http://localhost:3000/api/products",
-          this.newProduct
+          formData,
+          { headers: { "Content-Type": "multipart/form-data" } }
         );
         this.products.push(response.data);
-        this.newProduct = {
-          product_name: "",
-          manufacturer: "",
-          price: 0,
-          stock_on_hand: 0,
-        };
+        this.resetNewProduct();
       } catch (error) {
-        console.error("Error adding product:", error);
+        console.error(
+          "Error adding product:",
+          error.response?.data || error.message
+        );
       }
+    },
+    resetNewProduct() {
+      this.newProduct = {
+        product_name: "",
+        product_model: "", // Added product_model
+        manufacturer: "",
+        price: 0,
+        stock_on_hand: 0,
+        image: null,
+        features: {
+          weight: "",
+          dimensions: "",
+          OS: "",
+          screensize: "",
+          resolution: "",
+          CPU: "",
+          RAM: "",
+          STORAGE: "",
+          battery: "",
+          rear_camera: "",
+          front_camera: "",
+        },
+      };
+    },
+    handleFileUpload(event) {
+      this.newProduct.image = event.target.files[0];
     },
     async updateProduct(product) {
       try {
@@ -154,7 +272,10 @@ export default {
         );
         this.showModal = true;
       } catch (error) {
-        console.error("Error updating product:", error);
+        console.error(
+          "Error updating product:",
+          error.response?.data || error.message
+        );
       }
     },
     async deleteProduct(productId) {
@@ -164,7 +285,10 @@ export default {
           (product) => product.product_id !== productId
         );
       } catch (error) {
-        console.error("Error deleting product:", error);
+        console.error(
+          "Error deleting product:",
+          error.response?.data || error.message
+        );
       }
     },
     closeModal() {
@@ -174,4 +298,6 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+/* Add any necessary styles here */
+</style>

@@ -1,17 +1,21 @@
 <template>
-  <NavBar></NavBar>
-  <SecondaryNav></SecondaryNav>
+  <NavBar ref="navbar" />
 
-  <router-view />
-  <FooterSection></FooterSection>
+  <router-view @login-success="updateNavBar" />
+
+  <FooterSection />
 </template>
 
 <script>
 import NavBar from "./components/NavBar.vue";
-import SecondaryNav from "./components/SecondaryNav.vue";
 import FooterSection from "./components/FooterSection.vue";
 
 export default {
-  components: { NavBar, FooterSection, SecondaryNav },
+  components: { NavBar, FooterSection },
+  methods: {
+    updateNavBar() {
+      this.$refs.navbar.checkUserRole();
+    },
+  },
 };
 </script>

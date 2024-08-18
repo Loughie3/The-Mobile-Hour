@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "../views/HomeView.vue";
 import ShopAllView from "../views/ShopAllView.vue";
 import LoginForm from "../views/LoginForm.vue";
-import SignUp from "../views/SignUp.vue";
+
 import AdminDashboard from "../views/AdminDashboard.vue";
 import ManageStock from "../views/ManageStock.vue";
 import ManagerViewUsers from "../views/ManagerViewUsers.vue";
@@ -28,11 +28,7 @@ const routes = [
     name: "LoginForm",
     component: LoginForm,
   },
-  {
-    path: "/signUp",
-    name: "SignUp",
-    component: SignUp,
-  },
+
   {
     path: "/individualItem",
     name: "IndividualItem",

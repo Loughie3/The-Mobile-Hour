@@ -91,18 +91,18 @@ export default {
 .button-group {
   display: flex;
   flex-direction: column;
-  align-items: center; /* Align buttons horizontally centered */
+  align-items: center;
 }
 
 .button-item {
-  margin-bottom: 3rem; /* Adjust spacing between buttons */
+  margin-bottom: 3rem;
   width: 70%;
 }
 
 button {
   padding: 1rem;
-  width: 100%; /* Ensure button expands to full width of its container */
-  text-align: center; /* Center button text */
+  width: 100%;
+  text-align: center;
 }
 .heading {
   margin-bottom: 2rem;

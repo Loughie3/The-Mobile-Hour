@@ -4,6 +4,16 @@
     <div class="row">
       <div class="col">
         <main>
+          <nav style="--bs-breadcrumb-divider: '>'" aria-label="breadcrumb">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item">
+                <a href="/admin/dashboard">Admin Dashboard</a>
+              </li>
+              <li class="breadcrumb-item active" aria-current="page">
+                View Users
+              </li>
+            </ol>
+          </nav>
           <div class="container">
             <table class="table">
               <thead>

@@ -2,6 +2,16 @@
   <div class="page-container">
     <main class="content-wrap">
       <h1 class="heading">View All Users</h1>
+      <nav style="--bs-breadcrumb-divider: '>'" aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item">
+            <a href="/admin/dashboard">Admin Dashboard</a>
+          </li>
+          <li class="breadcrumb-item active" aria-current="page">
+            Manage Stock
+          </li>
+        </ol>
+      </nav>
       <div class="row">
         <div class="col">
           <div class="container">

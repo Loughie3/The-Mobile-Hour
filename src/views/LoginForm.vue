@@ -7,26 +7,29 @@
         <div class="col-12 col-md-4">
           <form @submit.prevent="login">
             <div class="mb-3">
-              <label for="username" class="form-label">Username</label>
+              <label for="username" class="form-label" required>Username</label>
               <input
                 v-model="username"
                 type="text"
                 class="form-control"
                 id="username"
+                minlength="5"
+                maxlength="20"
+                pattern="^[a-zA-Z0-9]+$"
               />
             </div>
             <div class="mb-3">
-              <label for="password" class="form-label">Password</label>
+              <label for="password" class="form-label" required>Password</label>
               <input
                 v-model="password"
                 type="password"
                 class="form-control"
                 id="password"
+                minlength="6"
+                maxlength="20"
               />
             </div>
             <button type="submit" class="btn">Login</button>
-            <div>or</div>
-            <a href="/signUp">Sign Up</a>
           </form>
         </div>
         <div class="col"></div>
@@ -53,8 +56,11 @@ export default {
           username: this.username,
           password: this.password,
         });
-        const { token } = response.data;
+        const { token, role } = response.data;
         localStorage.setItem("token", token);
+        localStorage.setItem("user_role", role); // Store the role in localStorage
+
+        this.$emit("login-success"); // Emit an event on successful login
         this.$router.push("/admin/dashboard");
       } catch (error) {
         console.error("Login error:", error);
@@ -71,19 +77,17 @@ body {
   height: 100%;
   margin: 0;
 }
-.heading {
-  margin-bottom: 3rem;
-}
 
 label {
   padding: 1rem;
   font-size: 1.2rem;
 }
-.or {
-  margin-bottom: 2rem;
+input {
+  border-color: #ff5a5f;
 }
+
 button {
-  margin: 2rem;
+  margin-top: 2rem;
 }
 
 .page-container {

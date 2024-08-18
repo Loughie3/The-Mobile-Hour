@@ -50,7 +50,7 @@ export default {
 
 <style scoped>
 .filterSection {
-  padding-left: 1rem;
+  margin-left: 2rem;
 }
 h3 {
   margin-top: 2rem;
