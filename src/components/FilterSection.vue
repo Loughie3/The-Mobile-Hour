@@ -1,5 +1,13 @@
 <template>
   <div class="filterSection container-fluid">
+    <h3>Search Products</h3>
+    <input
+      type="text"
+      placeholder="Search by product name or brand..."
+      v-model="searchQuery"
+      @input="searchProducts"
+    />
+
     <h3>Filter By Price</h3>
     <ul>
       <li>
@@ -16,7 +24,7 @@
       </li>
     </ul>
 
-    <h3>Filter By Brand</h3>
+    <h3>Popular Brands</h3>
     <ul>
       <li>
         <a @click="selectManufacturer('Google')">Google</a>
@@ -37,12 +45,20 @@
 <script>
 export default {
   name: "FilterSection",
+  data() {
+    return {
+      searchQuery: "",
+    };
+  },
   methods: {
     selectPriceRange(min, max) {
       this.$emit("filter-by-price", { min, max });
     },
     selectManufacturer(manufacturer) {
       this.$emit("filter-by-manufacturer", { manufacturer });
+    },
+    searchProducts() {
+      this.$emit("filter-by-search", this.searchQuery);
     },
   },
 };
@@ -64,5 +80,11 @@ li {
 }
 a {
   cursor: pointer;
+}
+input {
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+  width: 100%;
+  box-sizing: border-box;
 }
 </style>

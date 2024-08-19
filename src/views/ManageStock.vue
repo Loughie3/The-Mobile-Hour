@@ -15,160 +15,213 @@
               </li>
             </ol>
           </nav>
-          <div class="container">
-            <table class="table">
-              <thead>
-                <tr>
-                  <th>Name</th>
-                  <th>Brand</th>
-                  <th>Price</th>
-                  <th>Stock on Hand</th>
-                  <th>Update Product</th>
-                  <th>Delete Product</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr
-                  class="data"
-                  v-for="product in products"
-                  :key="product.product_id"
-                >
-                  <td><input v-model="product.product_name" /></td>
-                  <td><input v-model="product.manufacturer" /></td>
-                  <td><input v-model="product.price" /></td>
-                  <td><input v-model="product.stock_on_hand" /></td>
-                  <td>
-                    <!-- Add the image display here -->
-                    <img
-                      v-if="product.photo_url"
-                      :src="product.photo_url"
-                      alt="Product Image"
-                      style="max-width: 100px; max-height: 100px"
-                    />
-                  </td>
-                  <td>
-                    <button
-                      class="updateButton"
-                      @click="updateProduct(product)"
-                    >
-                      Update
-                    </button>
-                  </td>
-                  <td>
-                    <button @click="deleteProduct(product.product_id)">
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-            <div
-              v-if="showModal"
-              class="modal fade show d-flex align-items-center justify-content-center"
-              tabindex="-1"
-              style="display: block"
-              aria-modal="true"
-              role="dialog"
-            >
-              <div class="modal-dialog">
-                <div class="modal-content">
-                  <div class="modal-body">
-                    <p>The product has been successfully updated.</p>
-                  </div>
-                  <div class="modal-footer">
-                    <button
-                      type="button"
-                      class="btn btn-secondary"
-                      @click="closeModal"
-                    >
-                      Close
-                    </button>
-                  </div>
+
+          <!-- Manage Stock Section -->
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Brand</th>
+                <th>Price</th>
+                <th>Stock on Hand</th>
+                <th>Update Product</th>
+                <th>Delete Product</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                class="data"
+                v-for="product in products"
+                :key="product.product_id"
+              >
+                <td><input v-model="product.product_name" /></td>
+                <td><input v-model="product.manufacturer" /></td>
+                <td><input v-model="product.price" /></td>
+                <td><input v-model="product.stock_on_hand" /></td>
+                <td>
+                  <button class="updateButton" @click="updateProduct(product)">
+                    Update
+                  </button>
+                </td>
+                <td>
+                  <button @click="deleteProduct(product.product_id)">
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div
+            v-if="showModal"
+            class="modal fade show d-flex align-items-center justify-content-center"
+            tabindex="-1"
+            style="display: block"
+            aria-modal="true"
+            role="dialog"
+          >
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-body">
+                  <p>The product has been successfully updated.</p>
+                </div>
+                <div class="modal-footer">
+                  <button
+                    type="button"
+                    class="btn btn-secondary"
+                    @click="closeModal"
+                  >
+                    Close
+                  </button>
                 </div>
               </div>
             </div>
           </div>
+
+          <!-- Add New Items Section -->
+          <aside>
+            <h2>Add New Items</h2>
+            <div class="container bottom-container">
+              <form @submit.prevent="addProduct">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Item</th>
+                      <th>Brand</th>
+                      <th>Price</th>
+                      <th>Stock on Hand</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>
+                        <input v-model="newProduct.product_name" />
+                      </td>
+                      <td>
+                        <input v-model="newProduct.manufacturer" />
+                      </td>
+                      <td><input v-model="newProduct.price" /></td>
+                      <td>
+                        <input v-model="newProduct.stock_on_hand" />
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <!-- Add Feature Details Section -->
+                <aside>
+                  <h2>Feature Details</h2>
+                  <div class="container">
+                    <table class="table">
+                      <thead>
+                        <tr>
+                          <th>Weight</th>
+                          <th>Dimensions</th>
+                          <th>OS</th>
+                          <th>Screen Size</th>
+                          <th>Resolution</th>
+                          <th>Battery</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>
+                            <input
+                              v-model="newProduct.features.weight"
+                              placeholder="Weight"
+                            />
+                          </td>
+                          <td>
+                            <input
+                              v-model="newProduct.features.dimensions"
+                              placeholder="Dimensions"
+                            />
+                          </td>
+                          <td>
+                            <input
+                              v-model="newProduct.features.OS"
+                              placeholder="OS"
+                            />
+                          </td>
+                          <td>
+                            <input
+                              v-model="newProduct.features.screensize"
+                              placeholder="Screen Size"
+                            />
+                          </td>
+                          <td>
+                            <input
+                              v-model="newProduct.features.resolution"
+                              placeholder="Resolution"
+                            />
+                          </td>
+                          <td>
+                            <input
+                              v-model="newProduct.features.battery"
+                              placeholder="Battery"
+                            />
+                          </td>
+                        </tr>
+                      </tbody>
+                      <thead>
+                        <tr>
+                          <th>CPU</th>
+                          <th>RAM</th>
+                          <th>Storage</th>
+                          <th>Front Camera</th>
+                          <th>Rear Camera</th>
+                          <th>Image</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>
+                            <input
+                              v-model="newProduct.features.CPU"
+                              placeholder="CPU"
+                            />
+                          </td>
+                          <td>
+                            <input
+                              v-model="newProduct.features.RAM"
+                              placeholder="RAM"
+                            />
+                          </td>
+                          <td>
+                            <input
+                              v-model="newProduct.features.STORAGE"
+                              placeholder="Storage"
+                            />
+                          </td>
+                          <td>
+                            <input
+                              v-model="newProduct.features.front_camera"
+                              placeholder="Front Camera"
+                            />
+                          </td>
+                          <td>
+                            <input
+                              v-model="newProduct.features.rear_camera"
+                              placeholder="Rear Camera"
+                            />
+                          </td>
+                          <td>
+                            <input type="file" @change="handleFileUpload" />
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </aside>
+
+                <!-- Centered Add Button -->
+                <div class="text-center my-4">
+                  <button class="btn btn-primary" type="submit">Add</button>
+                </div>
+              </form>
+            </div>
+          </aside>
         </main>
-        <aside>
-          <h2>Add New Items</h2>
-          <div class="container bottom-container">
-            <form @submit.prevent="addProduct">
-              <table class="table">
-                <thead>
-                  <tr>
-                    <th>Item</th>
-                    <th>Brand</th>
-                    <th>Price</th>
-                    <th>Stock on Hand</th>
-                    <th>Image</th>
-                    <th>Feature Details</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td><input v-model="newProduct.product_name" /></td>
-                    <td><input v-model="newProduct.manufacturer" /></td>
-                    <td><input v-model="newProduct.price" /></td>
-                    <td><input v-model="newProduct.stock_on_hand" /></td>
-                    <td><input type="file" @change="handleFileUpload" /></td>
-                    <td>
-                      <!-- Feature inputs -->
-                      <div>
-                        <input
-                          v-model="newProduct.features.weight"
-                          placeholder="Weight"
-                        />
-                        <input
-                          v-model="newProduct.features.dimensions"
-                          placeholder="Dimensions"
-                        />
-                        <input
-                          v-model="newProduct.features.OS"
-                          placeholder="OS"
-                        />
-                        <input
-                          v-model="newProduct.features.screensize"
-                          placeholder="Screen Size"
-                        />
-                        <input
-                          v-model="newProduct.features.resolution"
-                          placeholder="Resolution"
-                        />
-                        <input
-                          v-model="newProduct.features.CPU"
-                          placeholder="CPU"
-                        />
-                        <input
-                          v-model="newProduct.features.RAM"
-                          placeholder="RAM"
-                        />
-                        <input
-                          v-model="newProduct.features.STORAGE"
-                          placeholder="Storage"
-                        />
-                        <input
-                          v-model="newProduct.features.battery"
-                          placeholder="Battery"
-                        />
-                        <input
-                          v-model="newProduct.features.rear_camera"
-                          placeholder="Rear Camera"
-                        />
-                        <input
-                          v-model="newProduct.features.front_camera"
-                          placeholder="Front Camera"
-                        />
-                      </div>
-                    </td>
-                    <td>
-                      <button class="addButton" type="submit">Add</button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </form>
-          </div>
-        </aside>
       </div>
     </div>
   </div>
@@ -307,6 +360,12 @@ export default {
 };
 </script>
 
-<style>
-/* Add any necessary styles here */
+<style scoped>
+.btn {
+  width: 20%;
+}
+
+h2 {
+  margin-top: 4rem;
+}
 </style>

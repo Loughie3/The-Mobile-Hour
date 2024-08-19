@@ -7,6 +7,7 @@
           <FilterSection
             @filter-by-manufacturer="filterProductsByManufacturer"
             @filter-by-price="filterProductsByPrice"
+            @filter-by-search="filterProductsBySearch"
           />
         </aside>
       </div>
@@ -87,6 +88,14 @@ export default {
     filterProductsByPrice({ min, max }) {
       this.filteredProducts = this.products.filter(
         (product) => product.price >= min && product.price < max
+      );
+    },
+    filterProductsBySearch(query) {
+      const lowerQuery = query.toLowerCase();
+      this.filteredProducts = this.products.filter(
+        (product) =>
+          product.product_name.toLowerCase().includes(lowerQuery) ||
+          product.manufacturer.toLowerCase().includes(lowerQuery)
       );
     },
   },
