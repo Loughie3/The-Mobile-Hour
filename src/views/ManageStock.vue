@@ -271,6 +271,23 @@ export default {
       }
     },
     async addProduct() {
+      if (
+        !this.newProduct.features.weight ||
+        !this.newProduct.features.dimensions ||
+        !this.newProduct.features.OS ||
+        !this.newProduct.features.screensize ||
+        !this.newProduct.features.resolution ||
+        !this.newProduct.features.CPU ||
+        !this.newProduct.features.RAM ||
+        !this.newProduct.features.STORAGE ||
+        !this.newProduct.features.battery ||
+        !this.newProduct.features.rear_camera ||
+        !this.newProduct.features.front_camera
+      ) {
+        alert("Please fill in all feature fields.");
+        return;
+      }
+
       const formData = new FormData();
       formData.append("product_name", this.newProduct.product_name);
       formData.append("product_model", this.newProduct.product_model);
@@ -280,10 +297,7 @@ export default {
       if (this.newProduct.image) {
         formData.append("image", this.newProduct.image);
       }
-      // Append features as individual form data
-      Object.keys(this.newProduct.features).forEach((key) => {
-        formData.append(`features[${key}]`, this.newProduct.features[key]);
-      });
+      formData.append("features", JSON.stringify(this.newProduct.features));
 
       try {
         const response = await axios.post(

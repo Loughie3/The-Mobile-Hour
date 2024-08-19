@@ -97,20 +97,43 @@ app.get("/api/products/:id", (req, res) => {
 
 // Add a new product
 app.post("/api/products", upload.single("image"), (req, res) => {
-  const {
-    product_name,
-    product_model,
-    manufacturer,
-    price,
-    stock_on_hand,
-    features,
-  } = req.body;
+  const { product_name, product_model, manufacturer, price, stock_on_hand } =
+    req.body;
+
+  // Parse the features from the request body
+  let features;
+  try {
+    features = JSON.parse(req.body.features);
+    console.log("Received features:", features);
+  } catch (err) {
+    console.error("Error parsing features JSON:", err);
+    return res.status(400).send("Invalid feature data");
+  }
+
+  // Validate the features object before inserting
+  if (
+    !features.weight ||
+    !features.dimensions ||
+    !features.OS ||
+    !features.screensize ||
+    !features.resolution ||
+    !features.CPU ||
+    !features.RAM ||
+    !features.STORAGE ||
+    !features.battery ||
+    !features.rear_camera ||
+    !features.front_camera
+  ) {
+    console.error("Missing feature data:", features);
+    return res.status(400).send("Missing feature data");
+  }
+
   const image = req.file ? `/uploads/${req.file.filename}` : null;
 
   const featureQuery = `
-  INSERT INTO feature (weight, dimensions, OS, screensize, resolution, CPU, RAM, STORAGE, battery, rear_camera, front_camera)
-  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
-`;
+    INSERT INTO feature (weight, dimensions, OS, screensize, resolution, CPU, RAM, STORAGE, battery, rear_camera, front_camera)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+  `;
 
   connection.query(
     featureQuery,
@@ -134,11 +157,12 @@ app.post("/api/products", upload.single("image"), (req, res) => {
       }
 
       const featureId = result.insertId;
+      console.log("New Feature ID:", featureId);
 
       const productQuery = `
-    INSERT INTO product (product_name, product_model, manufacturer, price, stock_on_hand, feature_id, photo_url)
-    VALUES (?, ?, ?, ?, ?, ?, ?);
-  `;
+        INSERT INTO product (product_name, product_model, manufacturer, price, stock_on_hand, feature_id, photo_url)
+        VALUES (?, ?, ?, ?, ?, ?, ?);
+      `;
 
       connection.query(
         productQuery,
@@ -156,6 +180,7 @@ app.post("/api/products", upload.single("image"), (req, res) => {
             console.error("Error adding product:", err);
             return res.status(500).send("Server error");
           }
+          console.log("New Product ID:", result.insertId);
           res.json({ product_id: result.insertId, ...req.body });
         }
       );
