@@ -51,32 +51,69 @@
         <aside>
           <h2 class="heading">Add New User</h2>
           <div class="container bottom-container">
-            <table class="table">
-              <thead>
-                <tr>
-                  <th>First Name</th>
-                  <th>Last Name</th>
-                  <th>Role</th>
-                  <th>User Name</th>
-                  <th>Password</th>
-                  <th>Edit User</th>
-
-                  <td></td>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td><input v-model="newUser.firstname" /></td>
-                  <td><input v-model="newUser.lastname" /></td>
-                  <td><input v-model="newUser.user_role" /></td>
-                  <td><input v-model="newUser.username" /></td>
-                  <td><input v-model="newUser.user_password" /></td>
-                  <td>
-                    <button class="addButton" @click="addUser">Add</button>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+            <form @submit.prevent="addUser">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Role</th>
+                    <th>User Name</th>
+                    <th>Password</th>
+                    <th>Edit User</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>
+                      <input
+                        type="text"
+                        maxlength="20"
+                        required
+                        v-model="newUser.firstname"
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="text"
+                        maxlength="20"
+                        required
+                        v-model="newUser.lastname"
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="text"
+                        maxlength="10"
+                        required
+                        v-model="newUser.user_role"
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="text"
+                        maxlength="20"
+                        required
+                        v-model="newUser.username"
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="text"
+                        required
+                        pattern="^[a-zA-Z0-9]+$"
+                        minlength="6"
+                        maxlength="20"
+                        v-model="newUser.user_password"
+                      />
+                    </td>
+                    <td>
+                      <button type="submit" class="addButton">Add</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </form>
           </div>
         </aside>
       </div>
@@ -152,4 +189,8 @@ export default {
 };
 </script>
 
-<style></style>
+<style scoped>
+h2 {
+  padding: 0;
+}
+</style>

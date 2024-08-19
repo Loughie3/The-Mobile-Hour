@@ -259,22 +259,31 @@ app.put("/api/users/:id", (req, res) => {
   );
 });
 
-// Add A new User
-app.post("/api/users", (req, res) => {
+app.post("/api/users", async (req, res) => {
   const { firstname, lastname, user_role, username, user_password } = req.body;
-  const query = `INSERT INTO user (firstname, lastname, user_role, username, user_password) VALUES (?, ?, ?, ?, ?)`;
-  connection.query(
-    query,
-    [firstname, lastname, user_role, username, user_password],
-    (err, result) => {
-      if (err) {
-        console.error("Error adding user:", err);
-        res.status(500).send("Server error");
-        return;
+
+  try {
+    // Hash the password
+    const hashedPassword = await bcrypt.hash(user_password, 10);
+
+    // Insert the user into the database with the hashed password
+    const query = `INSERT INTO user (firstname, lastname, user_role, username, user_password) VALUES (?, ?, ?, ?, ?)`;
+    connection.query(
+      query,
+      [firstname, lastname, user_role, username, hashedPassword],
+      (err, result) => {
+        if (err) {
+          console.error("Error adding user:", err);
+          res.status(500).send("Server error");
+          return;
+        }
+        res.json({ user_id: result.insertId, ...req.body });
       }
-      res.json({ user_id: result.insertId, ...req.body });
-    }
-  );
+    );
+  } catch (error) {
+    console.error("Error hashing password:", error);
+    res.status(500).send("Server error");
+  }
 });
 
 // Delete User

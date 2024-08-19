@@ -34,10 +34,38 @@
                 v-for="product in products"
                 :key="product.product_id"
               >
-                <td><input v-model="product.product_name" /></td>
-                <td><input v-model="product.manufacturer" /></td>
-                <td><input v-model="product.price" /></td>
-                <td><input v-model="product.stock_on_hand" /></td>
+                <td>
+                  <input
+                    type="text"
+                    maxlength="30"
+                    required
+                    v-model="product.product_name"
+                  />
+                </td>
+                <td>
+                  <input
+                    type="text"
+                    maxlength="30"
+                    required
+                    v-model="product.manufacturer"
+                  />
+                </td>
+                <td>
+                  <input
+                    type="number"
+                    min="0"
+                    max="99999"
+                    v-model="product.price"
+                  />
+                </td>
+                <td>
+                  <input
+                    type="number"
+                    min="0"
+                    max="99999"
+                    v-model="product.stock_on_hand"
+                  />
+                </td>
                 <td>
                   <button class="updateButton" @click="updateProduct(product)">
                     Update
@@ -129,7 +157,7 @@
                           placeholder="Stock on Hand"
                           type="number"
                           min="0"
-                          max="9999999999"
+                          max="99999"
                           step="1"
                           required
                         />
