@@ -95,14 +95,44 @@
                   <tbody>
                     <tr>
                       <td>
-                        <input v-model="newProduct.product_name" />
+                        <input
+                          v-model="newProduct.product_name"
+                          placeholder="Product Name"
+                          type="text"
+                          maxlength="30"
+                          required
+                        />
                       </td>
                       <td>
-                        <input v-model="newProduct.manufacturer" />
+                        <input
+                          v-model="newProduct.manufacturer"
+                          placeholder="Manufacturer"
+                          type="text"
+                          maxlength="30"
+                          required
+                        />
                       </td>
-                      <td><input v-model="newProduct.price" /></td>
                       <td>
-                        <input v-model="newProduct.stock_on_hand" />
+                        <input
+                          v-model="newProduct.price"
+                          placeholder="Price"
+                          type="number"
+                          min="0"
+                          max="99999"
+                          step="1"
+                          required
+                        />
+                      </td>
+                      <td>
+                        <input
+                          v-model="newProduct.stock_on_hand"
+                          placeholder="Stock on Hand"
+                          type="number"
+                          min="0"
+                          max="9999999999"
+                          step="1"
+                          required
+                        />
                       </td>
                     </tr>
                   </tbody>
@@ -129,36 +159,60 @@
                             <input
                               v-model="newProduct.features.weight"
                               placeholder="Weight"
+                              type="number"
+                              min="0"
+                              max="99999"
+                              step="1"
+                              required
                             />
                           </td>
                           <td>
                             <input
                               v-model="newProduct.features.dimensions"
                               placeholder="Dimensions"
+                              type="number"
+                              min="0"
+                              max="99999"
+                              step="1"
+                              required
                             />
                           </td>
                           <td>
                             <input
                               v-model="newProduct.features.OS"
                               placeholder="OS"
+                              type="text"
+                              maxlength="10"
+                              required
                             />
                           </td>
                           <td>
                             <input
                               v-model="newProduct.features.screensize"
                               placeholder="Screen Size"
+                              type="number"
+                              min="0"
+                              max="9999"
+                              step="1"
+                              required
                             />
                           </td>
                           <td>
                             <input
                               v-model="newProduct.features.resolution"
                               placeholder="Resolution"
+                              type="text"
+                              maxlength="20"
+                              required
                             />
                           </td>
                           <td>
                             <input
                               v-model="newProduct.features.battery"
                               placeholder="Battery"
+                              type="text"
+                              maxlength="20"
+                              required
                             />
                           </td>
                         </tr>
@@ -179,30 +233,49 @@
                             <input
                               v-model="newProduct.features.CPU"
                               placeholder="CPU"
+                              type="text"
+                              maxlength="50"
+                              required
                             />
                           </td>
                           <td>
                             <input
                               v-model="newProduct.features.RAM"
                               placeholder="RAM"
+                              type="number"
+                              min="0"
+                              max="99999"
+                              step="1"
+                              required
                             />
                           </td>
                           <td>
                             <input
                               v-model="newProduct.features.STORAGE"
                               placeholder="Storage"
+                              type="number"
+                              min="0"
+                              max="99999"
+                              step="1"
+                              required
                             />
                           </td>
                           <td>
                             <input
                               v-model="newProduct.features.front_camera"
                               placeholder="Front Camera"
+                              type="text"
+                              maxlength="50"
+                              required
                             />
                           </td>
                           <td>
                             <input
                               v-model="newProduct.features.rear_camera"
                               placeholder="Rear Camera"
+                              type="text"
+                              maxlength="50"
+                              required
                             />
                           </td>
                           <td>
@@ -284,8 +357,6 @@ export default {
         !this.newProduct.features.rear_camera ||
         !this.newProduct.features.front_camera
       ) {
-        alert("Please fill in all feature fields.");
-        return;
       }
 
       const formData = new FormData();
